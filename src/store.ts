@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import employeesReducer from './features/employeeSlice';
+import { employeeApi } from './features/employeeApi';
 
 export const store = configureStore({
   reducer: {
-    employees: employeesReducer,
+    [employeeApi.reducerPath]: employeeApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(employeeApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

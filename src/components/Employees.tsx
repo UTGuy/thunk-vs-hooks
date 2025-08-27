@@ -1,33 +1,26 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchEmployeesThunk } from '../features/employeeSlice';
-import type { RootState, AppDispatch } from '../store';
 import Employee from './Employee';
+import { useFetchEmployeesQuery } from '../features/employeeApi';
 
 export default function Employees() {
-    const dispatch = useDispatch<AppDispatch>();
-    const { employees, loading, error } = useSelector((state: RootState) => state.employees);
-  
-    useEffect(() => {
-      dispatch(fetchEmployeesThunk());
-    }, [dispatch]);
-  
-    return (
-      <div>
-        <h1>Employees</h1>
-        {loading && <p>Loading...</p>}
-        {error && <p>Error: {error}</p>}
-        <ul>
-          {employees.map((employee: any, index: number) => (
-            <Employee 
-              key={index} 
-              picture={employee.picture.large}
-              name={`${employee.name.first} ${employee.name.last}`}
-              email={employee.email}
-              phone={employee.phone}
-            />
-          ))}
-        </ul>
-      </div>
-    );
-  };
+  const { data, error, isLoading } = useFetchEmployeesQuery(10);
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error: Failed to fetch employees</p>;
+
+  return (
+    <div>
+      <h1>Employees</h1>
+      <ul>
+        {data.results.map((employee: any, index: number) => (
+          <Employee
+            key={index}
+            picture={employee.picture.large}
+            name={`${employee.name.first} ${employee.name.last}`}
+            email={employee.email}
+            phone={employee.phone}
+          />
+        ))}
+      </ul>
+    </div>
+  );
+};
