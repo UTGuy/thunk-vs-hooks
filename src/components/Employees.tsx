@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchEmployeesThunk } from '../features/employeeSlice';
 import type { RootState, AppDispatch } from '../store';
+import Employee from './Employee';
 
 export default function Employees() {
     const dispatch = useDispatch<AppDispatch>();
@@ -18,12 +19,13 @@ export default function Employees() {
         {error && <p>Error: {error}</p>}
         <ul>
           {employees.map((employee: any, index: number) => (
-            <li key={index}>
-              <img src={employee.picture.large} alt={`${employee.name.first} ${employee.name.last}`} />
-              <p>{`${employee.name.first} ${employee.name.last}`}</p>
-              <p>{employee.email}</p>
-              <p>{employee.phone}</p>
-            </li>
+            <Employee 
+              key={index} 
+              picture={employee.picture.large}
+              name={`${employee.name.first} ${employee.name.last}`}
+              email={employee.email}
+              phone={employee.phone}
+            />
           ))}
         </ul>
       </div>
